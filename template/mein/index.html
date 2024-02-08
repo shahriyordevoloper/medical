@@ -15,7 +15,6 @@
   <link href="/static/assets/img/favicon.png" rel="icon">
   <link href="/static/assets/img/apple-touch-icon.png" rel="apple-touch-icon">
 
-  <!-- font-awesome  -->
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css" integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
@@ -86,6 +85,15 @@
 </ul>
 
   <style>
+    #form_update span{
+display: flex;
+flex-direction: column;
+padding-bottom: 20px;
+    }
+    #form_update span label{
+      line-height: 0;
+      padding-bottom: 8px;
+    }
      .msg{
         position: fixed;
         top: 80px;
@@ -238,7 +246,7 @@
   <br>
 
 
-  <table style="max-width: 840px;" id="example" class="table table-bordered table-hover ">
+  <table style="max-width: 840px;"  class="table table-bordered table-hover ">
 
 
   
@@ -249,10 +257,14 @@
         <th>Dori</th>
         <th>Dori miqdori</th>
         <th>Ro`yxatga kiritilgan vaqti</th>
+        <th>Boshqarish</th>
       </tr>
+
+
+
       {% for x in huruj %}
-      <tr>
-        <td id="data">1</td>
+      <tr >
+        <td id="data{{x.id}}">1</td>
                       <td>{{x.username}}</td>
                       <td>
                          {% if x.is_xuruj == True %}
@@ -264,13 +276,100 @@
                       <td>{{x.dori_name}}</td>
                       <td>{{x.dori_miqdor}}</td>
                       <td>{{x.date_times|date:'Y-m-d'}}  | {{x.date_times|time:"h:i"}} </td>
+                      <td> <a href="delete/{{x.id}}/">Delete</a> | <a href=""  data-toggle="modal" data-target="#exampleModalCenter{{x.id}}">Edit</a>  </td>
         
       </tr>
-      {% endfor %}
 
+      <div class="modal fade" id="exampleModalCenter{{x.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+          <div class="modal-content">
+<form action="update_sick/{{x.id}}" method="GET">
+
+
+            <div id="form_update" style="display: flex; flex-direction: column;" class="modal-body">
+               
+              <span>
+                <label for="">Ism-Familyasi</label>
+                <input value="{{x.username}}" type="text" name="username">
+              </span>
+              <span>
+                <label for="">Dori</label>
+                <input value="{{x.dori_name}}" type="text" name="dori">
+              </span>
+              <span>
+                <label for="">Dori miqdori</label>
+                <input value="{{x.dori_miqdor}}" type="text" name="dori_miqdori">
+              </span>     
+              <span>
+                <label for="">Talvasa xuruji</label>
+                <select name="talvasa"  id="">
+                  {% if  x.is_xuruj == True %}
+                    
+                  <option value="False">Yo'q</option>
+                  <option selected value="True">Bor</option>
+                  {% else %}
+                  <option selected value="False">Yo'q</option>
+                  <option  value="True">Bor</option>
+                  {% endif %}
+                </select>
+              </span>                     
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">Save changes</button>
+            </div>
+          </form>
+          </div>
+        </div>
+
+      </div>
+      {% endfor %}
+  
+ 
 
   </table>
 
+
+
+
+  <table style="max-width: 840px; visibility: hidden; display: none;" id="example"  class="table table-bordered table-hover ">
+
+
+  
+    <tr>
+      <th>#</th>
+      <th>Ism-Familyasi</th>
+      <th>Talvasa xuruji</th>
+      <th>Dori</th>
+      <th>Dori miqdori</th>
+      <th>Ro`yxatga kiritilgan vaqti</th>
+  
+    </tr>
+
+
+
+    {% for x in huruj %}
+    <tr >
+      <td id="data{{x.id}}">1</td>
+                    <td>{{x.username}}</td>
+                    <td>
+                       {% if x.is_xuruj == True %}
+                       bor 
+                       {% else %}
+                       yoq
+                       {% endif %}
+                      </td>
+                    <td>{{x.dori_name}}</td>
+                    <td>{{x.dori_miqdor}}</td>
+                    <td>{{x.date_times|date:'Y-m-d'}}  | {{x.date_times|time:"h:i"}} </td>
+                  
+      
+    </tr>
+    {% endfor %}
+
+
+
+</table>
 
 
   <form  method="get">
@@ -285,19 +384,17 @@
 <button onclick="tabletoExcel('example')">Exelga yuklab olish </button>
 
 <script>
-let b = 0
-for (const iterator of document.getElementById('myTable').children) {
-  b+=1
- iterator.children[0].innerHTML = b
-}
+let b = 0 
+'{% for x in huruj %}'
+b+=1
+document.getElementById("data{{x.id}}").innerHTML = b
 
-console.log(document.getElementById('myTable').children.length);
-
+'{% endfor %}'
 
 $(document).ready(function(){
   $("#myInput").on("keyup", function() {
     var value = $(this).val().toLowerCase();
-    $("#myTable tr").filter(function() {
+    $("#example tr").filter(function() {
       $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
     });
   });
