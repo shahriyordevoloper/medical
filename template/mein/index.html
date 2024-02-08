@@ -246,7 +246,7 @@ padding-bottom: 20px;
   <br>
 
 
-  <table style="max-width: 840px;"  class="table table-bordered table-hover ">
+  <table style="max-width: 840px;"  id="example" class="table table-bordered table-hover ">
 
 
   
@@ -289,19 +289,19 @@ padding-bottom: 20px;
             <div id="form_update" style="display: flex; flex-direction: column;" class="modal-body">
                
               <span>
-                <label for="">Ism-Familyasi</label>
+                <div >Ism-Familyasi</div>
                 <input value="{{x.username}}" type="text" name="username">
               </span>
               <span>
-                <label for="">Dori</label>
+                <div  >Dori</div>
                 <input value="{{x.dori_name}}" type="text" name="dori">
               </span>
               <span>
-                <label for="">Dori miqdori</label>
+                <div  >Dori miqdori</div>
                 <input value="{{x.dori_miqdor}}" type="text" name="dori_miqdori">
               </span>     
               <span>
-                <label for="">Talvasa xuruji</label>
+                <div >Talvasa xuruji</div>
                 <select name="talvasa"  id="">
                   {% if  x.is_xuruj == True %}
                     
@@ -332,7 +332,7 @@ padding-bottom: 20px;
 
 
 
-  <table style="max-width: 840px; visibility: hidden; display: none;" id="example"  class="table table-bordered table-hover ">
+  <table style="max-width: 840px; visibility: hidden; display: none;"  class="table table-bordered table-hover ">
 
 
   
