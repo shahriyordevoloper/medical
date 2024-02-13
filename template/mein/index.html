@@ -276,7 +276,7 @@ padding-bottom: 20px;
                       <td>{{x.dori_name}}</td>
                       <td>{{x.dori_miqdor}}</td>
                       <td>{{x.date_times|date:'Y-m-d'}}  | {{x.date_times|time:"h:i"}} </td>
-                      <td> <a href="delete/{{x.id}}/">Delete</a> | <a href=""  data-toggle="modal" data-target="#exampleModalCenter{{x.id}}">Edit</a>  </td>
+                      <td> <a href="delete/{{x.id}}/"><button type="button" class="btn btn-danger">O`chirish</button></a> <br><br>  <a href=""  data-toggle="modal" data-target="#exampleModalCenter{{x.id}}"><button type="button" class="btn btn-primary">Tahrirlash</button></a>  </td>
         
       </tr>
 
@@ -315,8 +315,8 @@ padding-bottom: 20px;
               </span>                     
             </div>
             <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              <button type="submit" class="btn btn-primary">Save changes</button>
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Yopish</button>
+              <button type="submit" class="btn btn-primary">O`zgarishlarni saqlash</button>
             </div>
           </form>
           </div>
@@ -376,12 +376,12 @@ padding-bottom: 20px;
     <input value="{{request.GET.date_from}}" required name="date_from" type="date" >
     <input value="{{request.GET.date_to}}" required name="date_to" type="date" >
   
-    <button>Sort</button>
+    <button class="btn btn-info">Saralash</button>
   
   </form>
 </div>
 
-<button onclick="tabletoExcel('example')">Exelga yuklab olish </button>
+<button class="btn btn-info" onclick="tabletoExcel('example')">Exelga jadvalni yuklab olish </button>
 
 <script>
 let b = 0 
