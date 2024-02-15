@@ -204,7 +204,7 @@
    <div class="table-responsive">
   <input class="form-control" id="myInput" type="text" placeholder="Qidiruv">
   <br>
-  <table class="table table-bordered table-hover ">
+  <!-- <table class="table table-bordered table-hover ">
     <thead>
       <tr>
         <th>#</th>
@@ -237,14 +237,154 @@
 
 
     </tbody>
-  </table>
+  </table> -->
+
+  <table style="max-width: 840px;"  id="example" class="table table-bordered table-hover ">
+
+
+  
+    <tr>
+      <th>#</th>
+      <th>Ism-Familyasi</th>
+      <th>Talvasa xuruji</th>
+      <th>Dori</th>
+      <th>Dori miqdori</th>
+      <th>Ro`yxatga kiritilgan vaqti</th>
+      <th>Boshqarish</th>
+    </tr>
+
+
+
+    {% for x in huruj %}
+    <tr >
+      <td id="data{{x.id}}">1</td>
+                    <td>{{x.username}}</td>
+                    <td>
+                       {% if x.is_xuruj == True %}
+                       bor 
+                       {% else %}
+                       yoq
+                       {% endif %}
+                      </td>
+                    <td>{{x.dori_name}}</td>
+                    <td>{{x.dori_miqdor}}</td>
+                    <td>{{x.date_times|date:'Y-m-d'}}  | {{x.date_times|time:"h:i"}} </td>
+                    <td> <a href="/delete1/{{x.id}}/"><button type="button" class="btn btn-danger">O`chirish</button></a> <br><br>  <a href=""  data-toggle="modal" data-target="#exampleModalCenter{{x.id}}"><button type="button" class="btn btn-primary">Tahrirlash</button></a>  </td>
+      
+    </tr>
+
+    <div class="modal fade" id="exampleModalCenter{{x.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+<form action="/update_sick1/{{x.id}}" method="GET">
+
+
+          <div id="form_update" style="display: flex; flex-direction: column;" class="modal-body">
+             
+            <span>
+              <div >Ism-Familyasi</div>
+              <input value="{{x.username}}" type="text" name="username">
+            </span>
+            <span>
+              <div  >Dori</div>
+              <input value="{{x.dori_name}}" type="text" name="dori">
+            </span>
+            <span>
+              <div  >Dori miqdori</div>
+              <input value="{{x.dori_miqdor}}" type="text" name="dori_miqdori">
+            </span>     
+            <span>
+              <div >Talvasa xuruji</div>
+              <select name="talvasa"  id="">
+                {% if  x.is_xuruj == True %}
+                  
+                <option value="False">Yo'q</option>
+                <option selected value="True">Bor</option>
+                {% else %}
+                <option selected value="False">Yo'q</option>
+                <option  value="True">Bor</option>
+                {% endif %}
+              </select>
+            </span>                     
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Yopish</button>
+            <button type="submit" class="btn btn-primary">O`zgarishlarni saqlash</button>
+          </div>
+        </form>
+        </div>
+      </div>
+
+    </div>
+    {% endfor %}
+
+
+
+</table>
+
+
+
+
+<table id="example1" style="max-width: 840px; visibility: hidden; display: none;"  class="table table-bordered table-hover ">
+
+
+
+  <tr>
+    <th>#</th>
+    <th>Ism-Familyasi</th>
+    <th>Talvasa xuruji</th>
+    <th>Dori</th>
+    <th>Dori miqdori</th>
+    <th>Ro`yxatga kiritilgan vaqti</th>
+
+  </tr>
+
+
+
+  {% for x in huruj %}
+  <tr >
+    <td id="data{{x.id}}">1</td>
+                  <td>{{x.username}}</td>
+                  <td>
+                     {% if x.is_xuruj == True %}
+                     bor 
+                     {% else %}
+                     yoq
+                     {% endif %}
+                    </td>
+                  <td>{{x.dori_name}}</td>
+                  <td>{{x.dori_miqdor}}</td>
+                  <td>{{x.date_times|date:'Y-m-d'}}  | {{x.date_times|time:"h:i"}} </td>
+                
+    
+  </tr>
+  {% endfor %}
+
+
+
+</table>
+
+<form  method="get">
+  <input value="{{request.GET.date_from}}" required name="date_from" type="date" >
+  <input value="{{request.GET.date_to}}" required name="date_to" type="date" >
+
+  <button class="btn btn-info">Saralash</button>
+
+</form>
+
+
+
 </div>
+
+
+<button class="btn btn-info" onclick="tabletoExcel('example1')">Exelga jadvalni yuklab olish </button>
+
 
 <script>
 $(document).ready(function(){
   $("#myInput").on("keyup", function() {
     var value = $(this).val().toLowerCase();
-    $("#myTable tr").filter(function() {
+    $("#example tr").filter(function() {
       $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
     });
   });
@@ -254,7 +394,6 @@ $(document).ready(function(){
 </body>
 </html>
 
-</section>
         
     <script src="/static/assets/js/jquery-3.6.1.min.js"></script>
     <script src="/static/assets/js/moment_js_2.222.js"></script>
@@ -277,7 +416,7 @@ $(document).ready(function(){
       var dateFrom = moment(from);
       var dateTo = moment(to);
      
-      $('#testTable tr').each(function(i, tr) {
+      $('#example tr').each(function(i, tr) {
         var val = $(tr).find("td:nth-child(4)").text();
         var dateVal = moment(val, "DD/MM/YYYY");
         var visible = (dateVal.isBetween(dateFrom, dateTo, null, [])) ? "" : "none"; // [] for inclusive
@@ -289,8 +428,23 @@ $(document).ready(function(){
     $('#datefilterfrom').on("change", filterRows);
     $('#datefilterto').on("change", filterRows);
   </script>
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
+          
+  <script type="text/javascript">
+    function tabletoExcel(table, name) {
+       var uri = 'data:application/vnd.ms-excel;base64,'
+             , template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>'
+             , base64 = function (s) { return window.btoa(unescape(encodeURIComponent(s))); }
+             , format = function (s, c) { return s.replace(/{(\w+)}/g, function (m, p) { return c[p]; }); };
+           if (!table.nodeType) table = document.getElementById(table);
+           var ctx = { worksheet: name || 'Worksheet', table: table.innerHTML };
+           window.location.href = uri + base64(format(template, ctx));
+   
+   }
      
-    </section>
+     </script>
+     
 
   </main><!-- End #main -->
   <footer id="footer" class="footer mt-5">
