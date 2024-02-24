@@ -16,7 +16,7 @@ def home(request):
 
         data_from =request.GET.get('date_from')
         data_to = request.GET.get('date_to')
-        hurujs = Sick.objects.filter(date_times__gte='2000-02-06 00:00'  ,date_times__lt='4024-02-06 23:59',user=request.user ).order_by('-id')
+        hurujs = Sick.objects.filter(date_times__gte='2000-02-06 00:00',date_times__lt='4024-02-06 23:59',user=request.user ).order_by('-id')
         if data_from and data_to :
             hurujs = Sick.objects.filter(date_times__gte=f'{data_from} 00:00'  ,date_times__lt=f'{data_to} 23:59',user=request.user ).order_by('-id')
         else:
