@@ -5,6 +5,12 @@ from .views import *
 
 urlpatterns = [
     path("", home ,name='home'), 
+    path("faq", faq ,name='faq'),
+    path("create_huruj/<int:id>/", create_huruj ,name='create_huruj'),
+    path("create_huruj1/<int:id>/", create_huruj1 ,name='create_huruj'),
+    path("create_huruj2/<int:id>/", create_huruj2 ,name='create_huruj'),
+    
+
     path("register/",user_create ,name='register' ), 
     path("tables_all/",tables ,name='tables_all' ), 
     path("comingtype/",comingtype ,name='comingtype' ), 

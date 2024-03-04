@@ -14,4 +14,10 @@ class Sick(models.Model):
         return self.username
 
 
+class Hurujs(models.Model):
+    date_times = models.DateTimeField(auto_now_add=True)
+    person = models.ForeignKey(Sick, on_delete=models.CASCADE,related_name='persons' )
+    
+
+
 

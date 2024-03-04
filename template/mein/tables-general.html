@@ -103,6 +103,9 @@
 </ul>
 
   <style>
+    table tr{
+      display: inherit;
+    }
      .msg{
         position: fixed;
         top: 80px;
@@ -172,8 +175,13 @@
           <span>Talvasa xurujli bemorlar</span>
         </a>
       </li>
-     
-        
+     <li class="nav-item">
+        <a class="nav-link collapsed" href="{% url 'faq' %}">
+          <i class="bi bi-bookmark"></i>
+          <span>Foydalanish qo`llanmasi</span>
+        </a>
+      </li>
+
         </ul>
       </li><!-- End Forms Nav -->
 
@@ -186,7 +194,6 @@
 
   </aside><!-- End Sidebar-->
 
-  
 
   <main id="main" class="main">
 
@@ -204,99 +211,73 @@
    <div class="table-responsive">
   <input class="form-control" id="myInput" type="text" placeholder="Qidiruv">
   <br>
-  <!-- <table class="table table-bordered table-hover ">
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>Ism-Familyasi</th>
-        <th>Talvasa xuruji</th>
-        <th>Dori</th>
-        <th>Dori miqdori</th>
-        <th>Ro`yxatga kiritilgan vaqti</th>
-      </tr>
-    </thead>
-    <tbody id="myTable">
-
-      {% for x in data %}
-      <tr>
-        <td>1</td>
-                      <td>{{x.username}}</td>
-                      <td>
-                        {% if x.is_xuruj == True %}
-                        bor 
-                        {% else %}
-                        yoq
-                        {% endif %}
-                      </td>
-                      <td>{{x.dori_name}}</td>
-                      <td>{{x.dori_miqdor}}</td>
-                      <td>{{x.date_times|date:'Y-m-d'}} | {{x.date_times|time:"h:i"}}</td>
-      </tr>
-      {% endfor %}
 
 
 
-    </tbody>
-  </table> -->
-
-  <table style="max-width: 840px;"  id="example" class="table table-bordered table-hover ">
+  <table   id="example" class="table table-bordered table-hover ">
 
 
   
-    <tr>
+    <tr data-count="title">
       <th>#</th>
       <th>Ism-Familyasi</th>
       <th>Talvasa xuruji</th>
       <th>Dori</th>
       <th>Dori miqdori</th>
       <th>Ro`yxatga kiritilgan vaqti</th>
+      <th>Huruj qilgan vaqtlar</th>
       <th>Boshqarish</th>
     </tr>
 
+    {% for x in datas|dictsortreversed:'count' %} 
 
-
-    {% for x in huruj %}
-    <tr >
-      <td id="data{{x.id}}">1</td>
-                    <td>{{x.username}}</td>
+    <tr data-count="{{x.sick.persons.all|length}}">
+      <td id="data{{x.sick.id}}">1</td>
+                    <td>{{x.sick.username}} {{x.count}} </td>
                     <td>
-                       {% if x.is_xuruj == True %}
+                       {% if x.sick.is_xuruj == True %}
                        bor 
                        {% else %}
                        yoq
                        {% endif %}
                       </td>
-                    <td>{{x.dori_name}}</td>
-                    <td>{{x.dori_miqdor}}</td>
-                    <td>{{x.date_times|date:'Y-m-d'}}  | {{x.date_times|time:"h:i"}} </td>
-                    <td> <a href="/delete1/{{x.id}}/"><button type="button" class="btn btn-danger">O`chirish</button></a> <br><br>  <a href=""  data-toggle="modal" data-target="#exampleModalCenter{{x.id}}"><button type="button" class="btn btn-primary">Tahrirlash</button></a>  </td>
-      
+                    <td>{{x.sick.dori_name}}</td>
+                    <td>{{x.sick.dori_miqdor}}</td>
+                    <td>{{x.sick.date_times|date:'Y-m-d'}}  | {{x.sick.date_times|time:"h:i"}} </td>
+                    <td><a  data-toggle="modal" data-target="#about{{x.sick.id}}" >Huruj vaqtlarni korish</a></td>
+                    <td class="d-flex gap-2">
+                       <a  href="/delete1/{{x.sick.id}}/"><button type="button" class="btn btn-danger">O`chirish</button></a> 
+                       
+                <a  href=""  data-toggle="modal" data-target="#exampleModalCenter{{x.sick.id}}"><button type="button" class="btn btn-primary">Tahrirlash</button></a>  
+                         
+                        <a  href="/create_huruj1/{{x.sick.id}}" ><button type="button" class="btn btn-primary">Huruj qildi</button></a>  
+                    </td>
     </tr>
 
-    <div class="modal fade" id="exampleModalCenter{{x.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal fade" id="exampleModalCenter{{x.sick.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
-<form action="/update_sick1/{{x.id}}" method="GET">
+<form action="/update_sick1/{{x.sick.id}}" method="GET">
 
 
           <div id="form_update" style="display: flex; flex-direction: column;" class="modal-body">
              
             <span>
               <div >Ism-Familyasi</div>
-              <input value="{{x.username}}" type="text" name="username">
+              <input value="{{x.sick.username}}" type="text" name="username">
             </span>
             <span>
               <div  >Dori</div>
-              <input value="{{x.dori_name}}" type="text" name="dori">
+              <input value="{{x.sick.dori_name}}" type="text" name="dori">
             </span>
             <span>
               <div  >Dori miqdori</div>
-              <input value="{{x.dori_miqdor}}" type="text" name="dori_miqdori">
+              <input value="{{x.sick.dori_miqdor}}" type="text" name="dori_miqdori">
             </span>     
             <span>
               <div >Talvasa xuruji</div>
               <select name="talvasa"  id="">
-                {% if  x.is_xuruj == True %}
+                {% if  x.sick.is_xuruj == True %}
                   
                 <option value="False">Yo'q</option>
                 <option selected value="True">Bor</option>
@@ -316,53 +297,93 @@
       </div>
 
     </div>
+
+    <div class="modal fade" id="about{{x.sick.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div style="display: flex ; flex-wrap: wrap; justify-content: center; gap: 6px; margin: 20px;">
+            {% for p in x.sick.persons.all|dictsortreversed:'date_times' %}
+            <span class="bg-dark text-white p-1">
+              {{p.date_times|date:'Y-m-d'}} {{p.date_times|time:"h:i"}}
+            </span>
+            {% endfor %}
+          </div>
+
+          <div class="modal-footer">
+<p class="btn btn-secondary">{{x.sick.persons.all|length}} hurujlar mavjud</p>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal" >Yopish</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
     {% endfor %}
 
 
 
+
 </table>
+<div id="sort_father">
+
+  <label  id="sort_most" class="btn btn-danger" onclick="sort_most()">Ko'p huruj qilganlar</label>
+  <label  id="sort_less" class="btn btn-danger" onclick="sort_less()">Kam huruj qilganlar</label>
+  <label  id="sort_all" class="btn btn-danger" onclick="sort_all()">Barchasi</label>
+</div>
 
 
 
-
-<table id="example1" style="max-width: 840px; visibility: hidden; display: none;"  class="table table-bordered table-hover ">
-
+<table  id="example1" hidden  class="table table-bordered table-hover ">
 
 
-  <tr>
-    <th>#</th>
+
+  <tr data-count="title">
+    <th>Huruj soni</th>
     <th>Ism-Familyasi</th>
     <th>Talvasa xuruji</th>
     <th>Dori</th>
     <th>Dori miqdori</th>
     <th>Ro`yxatga kiritilgan vaqti</th>
+    <th style="width: fit-content;"> Huruj qilgan vaqtlar</th>
+
 
   </tr>
 
 
 
-  {% for x in huruj %}
-  <tr >
-    <td id="data{{x.id}}">1</td>
-                  <td>{{x.username}}</td>
+  {% for x in datas|dictsortreversed:'count' %}
+ 
+  <tr data-count="{{x.sick.persons.all|length}}">
+    <td>{{x.count}}</td>
+                  <td>{{x.sick.username}}</td>
                   <td>
-                     {% if x.is_xuruj == True %}
+                     {% if x.sick.is_xuruj == True %}
                      bor 
                      {% else %}
                      yoq
                      {% endif %}
                     </td>
-                  <td>{{x.dori_name}}</td>
-                  <td>{{x.dori_miqdor}}</td>
-                  <td>{{x.date_times|date:'Y-m-d'}}  | {{x.date_times|time:"h:i"}} </td>
+                  <td>{{x.sick.dori_name}}</td>
+                  <td>{{x.sick.dori_miqdor}}</td>
+                  <td>{{x.sick.date_times|date:'Y-m-d'}}  | {{x.sick.date_times|time:"h:i"}} </td>
+                  <td width="300"> 
+
+                    {% for p in x.sick.persons.all|dictsortreversed:'date_times' %}
+                      {{p.date_times|date:'Y-m-d'}} {{p.date_times|time:"h:i"}}  ‎  ‎ ‎  
+                    {% endfor %}
+                    </td>
                 
     
   </tr>
+    
+ 
   {% endfor %}
 
 
 
 </table>
+
+
 
 <form  method="get">
   <input value="{{request.GET.date_from}}" required name="date_from" type="date" >
@@ -381,6 +402,14 @@
 
 
 <script>
+
+let b = 0 
+'{% for x in datas|dictsortreversed:"count" %}'
+b+=1
+document.getElementById("data{{x.sick.id}}").innerHTML = b
+
+'{% endfor %}'
+  
 $(document).ready(function(){
   $("#myInput").on("keyup", function() {
     var value = $(this).val().toLowerCase();
@@ -389,6 +418,104 @@ $(document).ready(function(){
     });
   });
 });
+
+
+let sort_name = ''
+function sort_style() {
+  
+  for (const iterator of document.getElementById('sort_father').children ) {
+    console.log(iterator.id , sort_name)
+    if(iterator.id == sort_name ){
+      iterator.className = 'btn btn-info'
+    }
+    else{
+    iterator.className = 'btn btn-danger'
+  
+    }
+    
+  }
+}
+
+
+function sort_most(){
+sort_name='sort_most'
+sort_style()
+for (const iterator  of document.getElementById('example1').children[0].children) {
+if(Number( iterator.getAttribute('data-count')) > 5 ){
+  iterator.style.display = 'inherit'
+
+}
+else if(iterator.getAttribute('data-count') == 'title'){
+  iterator.style.display = 'inherit'
+
+}
+else{
+  iterator.style.display = 'none'
+}
+
+}
+
+for (const iterator  of document.getElementById('example').children[0].children) {
+if(Number( iterator.getAttribute('data-count')) > 5 ){
+  iterator.style.display = 'inherit'
+
+}
+else if(iterator.getAttribute('data-count') == 'title'){
+  iterator.style.display = 'inherit'
+
+}
+else{
+  iterator.style.display = 'none'
+}
+
+}
+
+
+}
+
+function sort_less(){
+sort_name='sort_less'
+sort_style()
+for (const iterator  of document.getElementById('example1').children[0].children) {
+if(Number( iterator.getAttribute('data-count')) < 5 ){
+  iterator.style.display = 'inherit'
+}
+else if(iterator.getAttribute('data-count') == 'title'){
+  iterator.style.display = 'inherit'
+}
+else{
+  iterator.style.display = 'none'
+}
+
+}
+for (const iterator  of document.getElementById('example').children[0].children) {
+if(Number( iterator.getAttribute('data-count')) < 5 ){
+  iterator.style.display = 'inherit'
+}
+else if(iterator.getAttribute('data-count') == 'title'){
+  iterator.style.display = 'inherit'
+}
+else{
+  iterator.style.display = 'none'
+}
+
+}
+
+
+}
+
+function sort_all(){
+sort_name='sort_all'
+sort_style()
+for (const iterator  of document.getElementById('example1').children[0].children) {
+  iterator.style.display = 'inherit'
+}
+for (const iterator  of document.getElementById('example').children[0].children) {
+  iterator.style.display = 'inherit'
+}
+}
+
+
 </script>
 
 </body>

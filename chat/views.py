@@ -1,37 +1,93 @@
 from django.shortcuts import render ,redirect
-from .models import Sick
+from .models import Sick,Hurujs
 from django.http import HttpResponse,JsonResponse
 import datetime
+from faker import Faker
+from random import randint      
 
+def faq(request):
+    return render(request ,'mein/faq.html')
+
+    
 def home(request):
-    # print('\n' , datetime.datetime.now() , 'dddddddddddddddddddddddddddd', '\n')
+ 
+
 
 
     if request.user.is_active:
         all_bemor = Sick.objects.all().filter(user=request.user).order_by('-date_times')
         yoq = Sick.objects.filter(is_xuruj=True,user=request.user)
 
-
-
+        datas=[]
 
         data_from =request.GET.get('date_from')
         data_to = request.GET.get('date_to')
-        hurujs = Sick.objects.filter(date_times__gte='2000-02-06 00:00',date_times__lt='4024-02-06 23:59',user=request.user ).order_by('-id')
+
+        for i in all_bemor:
+            h = {'count':i.persons.filter().count(), 
+                'sick':i
+                }
+            datas.append(h)
+
+
         if data_from and data_to :
-            hurujs = Sick.objects.filter(date_times__gte=f'{data_from} 00:00'  ,date_times__lt=f'{data_to} 23:59',user=request.user ).order_by('-id')
-        else:
-            hurujs = Sick.objects.filter(date_times__gte='2000-02-06 00:00'  ,date_times__lt='4024-02-06 23:59',user=request.user ).order_by('-id')
+            datas=[]
+            for i in all_bemor:
+                h = {'count':i.persons.filter(date_times__gte=data_from+' 00:00',date_times__lt=data_to+' 23:59').count(), 
+                    'sick':i
+                    }
+                
+                if h['count'] > 0:
+
+                    datas.append(h)
+                else:
+                    pass
 
 
 
 
-
-        return render(request , 'mein/index.html', {'all_bemor':all_bemor,'yoq':yoq , 'huruj':hurujs   })
+        return render(request , 'mein/index.html', {'all_bemor':all_bemor,'yoq':yoq ,  'datas':datas})
     
 
     else:
         return redirect('accounts/login/')
-   
+
+
+
+def create_huruj(request,id):
+    print(request)
+    sick = Sick.objects.get(id=id)
+    Hurujs.objects.create(
+        person=sick
+    )
+    sick.is_xuruj = True
+    sick.save()
+    return redirect('/')
+
+def create_huruj1(request,id):
+    print(request)
+    sick = Sick.objects.get(id=id)
+    Hurujs.objects.create(
+        person=sick
+    )
+    sick.is_xuruj = True
+    sick.save()
+
+    return redirect('/tables_all/')
+
+
+def create_huruj2(request,id):
+    print(request)
+    sick = Sick.objects.get(id=id)
+    Hurujs.objects.create(
+        person=sick
+    )
+    sick.is_xuruj = True
+    sick.save()
+    return redirect('/comingtype/')
+
+
+
 
 def user_create(request):
     is_ajax = request.headers.get('X-Requested-With') == 'XMLHttpRequest'
@@ -50,49 +106,73 @@ def user_create(request):
 
     return render(request , 'mein/register.html')
 
-
-
 def comingtype(request):
     all_bemor = Sick.objects.all().filter(user=request.user).order_by('-date_times')
-    yoq = Sick.objects.filter(is_xuruj=True,user=request.user)
+    yoq = Sick.objects.filter(user=request.user, is_xuruj=True)
 
-
-
+    datas=[]
 
     data_from =request.GET.get('date_from')
     data_to = request.GET.get('date_to')
-    hurujs = Sick.objects.filter(date_times__gte='2000-02-06 00:00'  ,date_times__lt='4024-02-06 23:59',user=request.user ).order_by('-id')
+
+
+    for i in yoq:
+        h = {'count':i.persons.filter().count(), 
+            'sick':i
+            }
+        datas.append(h)
+
+
     if data_from and data_to :
-        hurujs = Sick.objects.filter(date_times__gte=f'{data_from} 00:00'  ,date_times__lt=f'{data_to} 23:59',user=request.user ).order_by('-id')
-    else:
-        hurujs = Sick.objects.filter(date_times__gte='2000-02-06 00:00'  ,date_times__lt='4024-02-06 23:59',user=request.user ).order_by('-id')
+        datas=[]
+        for i in yoq:
+            h = {'count':i.persons.filter(date_times__gte=data_from+' 00:00',date_times__lt=data_to+' 23:59').count(), 
+                'sick':i
+                }
+            if h['count'] > 0:
 
+                datas.append(h)
+            else:
+                pass
 
-
-    return render(request , 'mein/comingtype.html',{'data': hurujs.filter(is_xuruj=True)})
+    return render(request , 'mein/comingtype.html',{'datas':datas })
 
 def tables(request):
     all_bemor = Sick.objects.all().filter(user=request.user).order_by('-date_times')
-    yoq = Sick.objects.filter(is_xuruj=True,user=request.user)
+    yoq = Sick.objects.filter(user=request.user)
+    datas=[]
 
 
 
 
     data_from =request.GET.get('date_from')
     data_to = request.GET.get('date_to')
-    hurujs = Sick.objects.filter(date_times__gte='2000-02-06 00:00'  ,date_times__lt='4024-02-06 23:59',user=request.user ).order_by('-id')
+
+
+    for i in yoq:
+        h = {'count':i.persons.filter().count(), 
+            'sick':i
+            }
+        
+        datas.append(h)
+
+
     if data_from and data_to :
-        hurujs = Sick.objects.filter(date_times__gte=f'{data_from} 00:00'  ,date_times__lt=f'{data_to} 23:59',user=request.user ).order_by('-id')
-    else:
-        hurujs = Sick.objects.filter(date_times__gte='2000-02-06 00:00'  ,date_times__lt='4024-02-06 23:59',user=request.user ).order_by('-id')
+        datas=[]
+        for i in yoq:
+            h = {'count':i.persons.filter(date_times__gte=data_from+' 00:00',date_times__lt=data_to+' 23:59').count(), 
+                'sick':i
+                }
+            if h['count'] > 0:
 
-
-
+                datas.append(h)
+            else:
+                pass
 
 
         # return render(request , 'mein/index.html', {'all_bemor':all_bemor,'yoq':yoq , 'huruj':hurujs   })
     
-    return render(request , 'mein/tables-general.html',{'huruj':    hurujs })
+    return render(request , 'mein/tables-general.html',{'datas':    datas })
 
 
 
